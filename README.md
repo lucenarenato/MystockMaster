@@ -29,11 +29,6 @@ Features:
 
 Built with Laravel 9, Livewire, AlpineJs, and Tailwind CSS, ensuring a fast and responsive user experience. Try it out today and witness how it streamlines inventory management, propelling your business forward.
 
-## Demo
-
-You can check the demo here: 
-[https://test.hotechserver.com](https://test.hotechserver.com)
-
 
 ## Login with the following credentials
     -   Email: `admin@gmail.com`
@@ -89,27 +84,12 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 
 ## Contact
 
--   [Twitter](https://twitter.com/zakarialabib)
--   [LinkedIn](https://www.linkedin.com/in/zakaria-labib/)
--   [GitHub](https://www.github.com/zakarialabib/)
-
-## Donate
-
-If you like this project, leave a star and share it with your friends.
-
-## Contributors
-
-| Contributor | GitHub Profile |
-| --- | --- |
-| [Zakarialabib](https://github.com/Zakarialabib) | [![Avatar](https://github.com/Zakarialabib.png?size=50)](https://github.com/Zakarialabib) |
-| [dependabot[bot]](https://github.com/dependabot[bot]) | [![Avatar](https://github.com/dependabot[bot].png?size=50)](https://github.com/dependabot[bot]) |
-| [elmarzouguidev](https://github.com/elmarzouguidev) | [![Avatar](https://github.com/elmarzouguidev.png?size=50)](https://github.com/elmarzouguidev) |
-| [bilton30](https://github.com/bilton30) | [![Avatar](https://github.com/bilton30.png?size=50)](https://github.com/bilton30) |
-| [ismaail](https://github.com/ismaail) | [![Avatar](https://github.com/ismaail.png?size=50)](https://github.com/ismaail) |
-| [yassinebenaid](https://github.com/yassinebenaid) | [![Avatar](https://github.com/yassinebenaid.png?size=50)](https://github.com/yassinebenaid) |
+-   [Twitter](https://twitter.com/cpdrenato)
+-   [LinkedIn](https://www.linkedin.com/in/renato-lucena-33777133/)
+-   [GitHub](https://www.github.com/lucenarenato/)
 
 
-## Requisitos
+## Requisitos Docker
 
 - Docker instalado e em execução
 - Docker Compose v2 (comando `docker compose`)
