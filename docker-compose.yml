@@ -1,0 +1,135 @@
+services:
+  fpm:
+    container_name: suit_members_fpm
+    build:
+            args:
+                user: webuser
+                uid: 1000
+            context: ./.docker/fpm
+            dockerfile: Dockerfile
+    volumes:
+      - ./:/var/www/html
+      - ./.docker/fpm/www.conf:/usr/local/etc/php-fpm.d/www.conf
+    environment:
+      - TZ=${APP_TIMEZONE}
+    networks:
+      - app-network
+    restart: always
+    depends_on:
+      - redis
+
+  worker:
+    container_name: suit_members_worker
+    build:
+            args:
+                user: webuser
+                uid: 1000
+            context: ./.docker/worker
+            dockerfile: Dockerfile
+    volumes:
+      - ./:/var/www/html
+      - ./.docker/worker/supervisord.d/production:/etc/supervisor/conf.d/supervisord.d/
+      - ./.docker/worker/logrotate.d:/etc/logrotate.d/
+    environment:
+      - TZ=${APP_TIMEZONE}
+    networks:
+      - app-network
+    restart: always
+    depends_on:
+      - redis
+
+  nginx:
+    container_name: suit_members_nginx
+    image: nginx:1.27.0-alpine-slim
+    volumes:
+      - ./:/var/www/html
+      - ./.docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./.docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - "${NGINX_HTTP_PORT}:80"
+    environment:
+      - TZ=${APP_TIMEZONE}
+    networks:
+      - app-network
+    depends_on:
+      - fpm
+    restart: always
+
+  redis:
+    container_name: suit_members_redis
+    image: redis:7.4-rc-alpine
+    volumes:
+      - ./bootstrap/cache/redis:/data
+      - ./.docker/redis/redis.conf:/usr/local/etc/redis/redis.conf
+    ports:
+      - "${REDIS_PORT}:6379"
+    environment:
+      - TZ=${APP_TIMEZONE}
+    networks:
+      - app-network
+    restart: always
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+
+  mysql:
+    image: mysql:8.0
+    container_name: suit_members_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      TIMEZONE: "America/Sao_Paulo"
+    ports:
+      - "3307:3306"
+    command: --default-authentication-plugin=caching_sha2_password
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - "./.docker/mysql/create-database.sh:/docker-entrypoint-initdb.d/10-create-database.sh"
+    healthcheck:
+        test: ["CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}"]
+        retries: 3
+        timeout: 5s
+    networks:
+      - app-network
+
+  phpmyadmin:
+        container_name: "suit_members_phpmyadmin"
+        image: phpmyadmin/phpmyadmin:latest  # Suporta ARM64
+        restart: unless-stopped
+        ports:
+            - 8083:80
+        environment:
+            PMA_HOSTS: mysql
+            PMA_PORT: ${FORWARD_DB_PORT:-3306}
+            PMA_USER: ${DB_USERNAME}
+            PMA_PASSWORD: ${DB_PASSWORD}
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-root}
+            PMA_ARBITRARY: 1
+            UPLOAD_LIMIT: 350M
+        depends_on:
+            - mysql
+        networks:
+            - app-network
+
+  mailpit:
+    container_name: suit_members_mailpit
+    image: "axllent/mailpit:latest"
+    ports:
+        - "${FORWARD_MAILPIT_PORT:-1025}:1025"
+        - "${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025"
+    restart: always
+    networks:
+        - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+  meilisearch_data:
