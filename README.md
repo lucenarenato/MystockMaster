@@ -13,7 +13,7 @@ Welcome to a unique project that goes beyond the ordinary. I bring to you Mystoc
 
 I extend heartfelt gratitude to the Laravel community for their contributions, which have been a source of immense learning. Now, it's my turn to contribute and give back.
 
-(✌) سلام
+(✌) 
 
 ## Overview 
 
