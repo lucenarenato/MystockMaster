@@ -36,6 +36,13 @@ class LanguagesSeeder extends Seeder
                 'name'       => 'French',
                 'code'       => 'fr',
                 'status'     => 1,
+                'is_default' => false,
+            ],
+            [
+                'id'         => 4,
+                'name'       => 'Português Brasil',
+                'code'       => 'pt-br',
+                'status'     => 1,
                 'is_default' => true,
             ],
         ]);
