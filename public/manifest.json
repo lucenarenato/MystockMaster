@@ -36,7 +36,7 @@
           "url": "/play?track=%s"
         }
       ],
-    "theme_color": "#3367D6",  
+    "theme_color": "#3367D6",
     "description":"This is a PWA tutorial.",
     "icons": [
         {
@@ -49,13 +49,13 @@
         "src": "/images/icon-512x512.png",
         "sizes": "512x512",
         "type": "image/png"
-        } 
+        }
     ],
     "splash_pages": null,
     "related_applications": [
         {
           "platform": "windows",
-          "url": "https://www.github.com/zakarialabib",
+          "url": "https://www.github.com/lucenarenato",
           "id": "example.ExampleApp"
         },
         {
@@ -64,4 +64,3 @@
         }
       ]
 }
-  

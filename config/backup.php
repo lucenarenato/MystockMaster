@@ -10,7 +10,7 @@ return [
          */
         'name' => env('APP_NAME', 'myStockMaster'),
         'status' => env('BACKUP_STATUS',0),
-        'schedule' => 1, // make 2 or 3 
+        'schedule' => 1, // make 2 or 3
         'source' => [
 
             'files' => [
@@ -138,7 +138,7 @@ return [
         'notifiable' => \Spatie\Backup\Notifications\Notifiable::class,
 
         'mail' => [
-            'to' => 'zakarialabib@gmail.com ',
+            'to' => 'cpdrenato@gmail.com ',
 
             'from' => [
                 'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
