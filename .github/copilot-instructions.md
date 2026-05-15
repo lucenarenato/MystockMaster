@@ -1,11 +1,11 @@
-# Laravel & PHP Development Standards (Suit Members)
+# Laravel & PHP Development Standards (MyStockMaster)
 
 ## Technology Stack
 
-- **Language**: PHP 8.3+ (Focus on modern features)
-- **Framework**: Laravel 12.x+
+- **Language**: PHP 8.2+ (Focus on modern features)
+- **Framework**: Laravel 9.x+
 - **Database**: MySQL 8.0+
-- **Environment**: Docker (Container: `suit_members_fpm`)
+- **Environment**: Docker (Container: `fpm`)
 
 ## Coding Standards & Quality
 
@@ -49,6 +49,6 @@
 
 - O projeto roda exclusivamente em Docker.
 - **Comandos**: Sempre que sugerir comandos de terminal (artisan, phpunit, composer), formate-os para execução via container:
-    - `docker exec -it suit_members_fpm php artisan [comando]`
-    - `docker exec -it suit_members_fpm vendor/bin/phpunit`
-- **Migrations**: Utilize `docker exec -i suit_members_fpm php artisan migrate`.
+    - `docker exec -it fpm php artisan [comando]`
+    - `docker exec -it fpm vendor/bin/phpunit`
+- **Migrations**: Utilize `docker exec -i fpm php artisan migrate`.

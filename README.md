@@ -227,7 +227,7 @@ docker compose up -d --build --force-recreate
 Se o upload falhar por permissao no `storage`, ajuste dono e permissoes:
 
 ```bash
-sudo chown -R renato:renato /home/renato/code/suit-members-api #altere o user com seu nome
+sudo chown -R renato:renato /home/renato/code/ #altere o user com seu nome
 docker compose exec fpm chown -R www-data:www-data storage bootstrap/cache
 docker compose exec fpm find storage bootstrap/cache -type d -exec chmod 775 {} \;
 docker compose exec fpm find storage bootstrap/cache -type f -exec chmod 664 {} \;
@@ -237,23 +237,6 @@ Opcionalmente, valide escrita como usuario do PHP-FPM:
 
 ```bash
 docker compose exec -u www-data fpm sh -lc 'mkdir -p storage/app/public/banners && test -w storage/app/public/banners && echo OK_WRITE'
-```
-
-### Erro no login com `Erro do servidor`
-
-Se o login falhar e o ambiente tiver sido recriado do zero, o Passport pode estar sem chaves ou sem personal access client.
-
-Rode:
-
-```bash
-docker compose exec fpm php artisan passport:keys --force
-docker compose exec fpm php artisan passport:client --personal --name="Suit Members Personal Access Client" --no-interaction
-```
-
-Em seguida, corrija as permissoes das chaves (o `passport:keys` as cria como `root`, mas o PHP-FPM roda como `www-data`):
-
-```bash
-docker compose exec fpm chown www-data:www-data storage/oauth-private.key storage/oauth-public.key
 ```
 
 Isso costuma ser necessario depois de `migrate:fresh --seed`.
@@ -268,16 +251,8 @@ Depois do setup, valide o ambiente com este fluxo minimo:
 docker compose exec fpm php artisan migrate:fresh --seed
 ```
 
-2. Gere as chaves e o client do Passport:
-
-```bash
-docker compose exec fpm php artisan passport:keys --force
-docker compose exec fpm chown www-data:www-data storage/oauth-private.key storage/oauth-public.key
-docker compose exec fpm php artisan passport:client --personal --name="Suit Members Personal Access Client" --no-interaction
-```
-
-3. Verifique os servicos auxiliares:
+2. Verifique os servicos auxiliares:
 
 - PhpMyAdmin em `http://localhost:8082`
 - Mailpit em `http://localhost:8025`
-- Redis respondendo no container `suit_members_redis`
+- Redis respondendo no container `redis`
