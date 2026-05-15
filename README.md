@@ -228,6 +228,7 @@ Se o upload falhar por permissao no `storage`, ajuste dono e permissoes:
 
 ```bash
 sudo chown -R renato:renato /home/renato/code/ #altere o user com seu nome
+docker compose exec fpm chown -R www-data:www-data bootstrap/cache
 docker compose exec fpm chown -R www-data:www-data storage bootstrap/cache
 docker compose exec fpm find storage bootstrap/cache -type d -exec chmod 775 {} \;
 docker compose exec fpm find storage bootstrap/cache -type f -exec chmod 664 {} \;
