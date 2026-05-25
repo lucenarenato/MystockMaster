@@ -247,7 +247,9 @@
         </x-slot>
     </x-modal>
 
-    @livewire('sales.payment.index', ['sale' => $sale])
+    @if ($sale)
+        @livewire('sales.payment.index', ['sale' => $sale])
+    @endif
 
 
     @pushOnce('scripts')
@@ -255,7 +257,7 @@
             integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     @endPushOnce
-    
+
     @push('scripts')
         <script>
             document.addEventListener('livewire:load', function() {

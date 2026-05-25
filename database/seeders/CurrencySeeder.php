@@ -17,12 +17,43 @@ class CurrencySeeder extends Seeder
      */
     public function run()
     {
-        Currency::create([
+        Currency::firstOrCreate([
+            'code' => Str::upper('MAD'),
+        ], [
             'name'               => 'Dirham Marocain',
-            'code'               => Str::upper('MAD'),
             'symbol'             => 'DH',
             'thousand_separator' => ',',
             'decimal_separator'  => '.',
+            'exchange_rate'      => null,
+        ]);
+
+        Currency::firstOrCreate([
+            'code' => Str::upper('USD'),
+        ], [
+            'name'               => 'United States Dollar',
+            'symbol'             => '$',
+            'thousand_separator' => ',',
+            'decimal_separator'  => '.',
+            'exchange_rate'      => null,
+        ]);
+
+        Currency::firstOrCreate([
+            'code' => Str::upper('EUR'),
+        ], [
+            'name'               => 'Euro',
+            'symbol'             => '€',
+            'thousand_separator' => ',',
+            'decimal_separator'  => '.',
+            'exchange_rate'      => null,
+        ]);
+
+        Currency::firstOrCreate([
+            'code' => Str::upper('BRL'),
+        ], [
+            'name'               => 'Real Brasileiro',
+            'symbol'             => 'R$',
+            'thousand_separator' => '.',
+            'decimal_separator'  => ',',
             'exchange_rate'      => null,
         ]);
     }

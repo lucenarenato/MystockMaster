@@ -9,7 +9,7 @@ use App\Traits\GetModelByUuid;
 use App\Traits\UuidGenerator;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Customer extends Model
 {
@@ -56,10 +56,10 @@ class Customer extends Model
         return $this->hasOne(Wallet::class);
     }
 
-    /** @return HasOne<Sale> */
-    public function sales(): HasOne
+    /** @return HasMany<Sale> */
+    public function sales(): HasMany
     {
-        return $this->HasOne(Sale::class);
+        return $this->hasMany(Sale::class);
     }
 
     public function getTotalSalesAttribute()

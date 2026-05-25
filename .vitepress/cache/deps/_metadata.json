@@ -1,0 +1,91 @@
+{
+  "hash": "5d904dff",
+  "configHash": "41a9007e",
+  "lockfileHash": "2e71a918",
+  "browserHash": "ceb1e049",
+  "optimized": {
+    "vue": {
+      "src": "../../../node_modules/vue/dist/vue.runtime.esm-bundler.js",
+      "file": "vue.js",
+      "fileHash": "6cf08fc3",
+      "needsInterop": false
+    },
+    "vitepress > @vue/devtools-api": {
+      "src": "../../../node_modules/@vue/devtools-api/dist/index.js",
+      "file": "vitepress___@vue_devtools-api.js",
+      "fileHash": "52f16d4b",
+      "needsInterop": false
+    },
+    "vitepress > @vueuse/core": {
+      "src": "../../../node_modules/@vueuse/core/index.mjs",
+      "file": "vitepress___@vueuse_core.js",
+      "fileHash": "3a5ac59d",
+      "needsInterop": false
+    },
+    "@alpinejs/collapse": {
+      "src": "../../../node_modules/@alpinejs/collapse/dist/module.esm.js",
+      "file": "@alpinejs_collapse.js",
+      "fileHash": "c1a5d306",
+      "needsInterop": false
+    },
+    "@alpinejs/focus": {
+      "src": "../../../node_modules/@alpinejs/focus/dist/module.esm.js",
+      "file": "@alpinejs_focus.js",
+      "fileHash": "b5bd4077",
+      "needsInterop": false
+    },
+    "@alpinejs/intersect": {
+      "src": "../../../node_modules/@alpinejs/intersect/dist/module.esm.js",
+      "file": "@alpinejs_intersect.js",
+      "fileHash": "abc5ad39",
+      "needsInterop": false
+    },
+    "alpinejs": {
+      "src": "../../../node_modules/alpinejs/dist/module.esm.js",
+      "file": "alpinejs.js",
+      "fileHash": "50325a58",
+      "needsInterop": false
+    },
+    "axios": {
+      "src": "../../../node_modules/axios/index.js",
+      "file": "axios.js",
+      "fileHash": "f6a9ffc2",
+      "needsInterop": true
+    },
+    "lodash": {
+      "src": "../../../node_modules/lodash/lodash.js",
+      "file": "lodash.js",
+      "fileHash": "2f54d2a4",
+      "needsInterop": true
+    },
+    "perfect-scrollbar": {
+      "src": "../../../node_modules/perfect-scrollbar/dist/perfect-scrollbar.esm.js",
+      "file": "perfect-scrollbar.js",
+      "fileHash": "3c434d7e",
+      "needsInterop": false
+    },
+    "sweetalert2": {
+      "src": "../../../node_modules/sweetalert2/dist/sweetalert2.esm.all.js",
+      "file": "sweetalert2.js",
+      "fileHash": "a9fbda40",
+      "needsInterop": false
+    },
+    "@theme/index": {
+      "src": "../../../node_modules/vitepress/dist/client/theme-default/index.js",
+      "file": "@theme_index.js",
+      "fileHash": "4605d7d0",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-T3OFIMTC": {
+      "file": "chunk-T3OFIMTC.js"
+    },
+    "chunk-FF4XC6VD": {
+      "file": "chunk-FF4XC6VD.js"
+    },
+    "chunk-BUSYA2B4": {
+      "file": "chunk-BUSYA2B4.js"
+    }
+  }
+}

@@ -3,6 +3,11 @@ import laravel from 'laravel-vite-plugin';
 import livewire from '@defstudio/vite-livewire-plugin';
 
 export default defineConfig({
+    server: {
+        watch: {
+            ignored: ['**/vendor/**', '**/node_modules/**', '**/.git/**'],
+        },
+    },
     plugins: [
         laravel({
             input: [
@@ -11,8 +16,8 @@ export default defineConfig({
             ],
             refresh: false,
         }),
-        livewire({  
-            refresh: ['resources/css/app.css'], 
+        livewire({
+            refresh: ['resources/css/app.css'],
         }),
     ],
 });
