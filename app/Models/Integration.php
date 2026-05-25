@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Enums\IntegrationType;
 use App\Enums\Status;
 use App\Support\HasAdvancedFilter;
+use App\Traits\BelongsToTenant;
 use App\Traits\GetModelByUuid;
 use App\Traits\UuidGenerator;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,12 +16,14 @@ use Illuminate\Database\Eloquent\Model;
 class Integration extends Model
 {
     use HasAdvancedFilter;
+    use BelongsToTenant;
     use GetModelByUuid;
     use UuidGenerator;
     use HasFactory;
 
     public const ATTRIBUTES = [
         'id',
+        'tenant_id',
         'type',
         'store_url',
         'last_sync',
@@ -41,6 +44,7 @@ class Integration extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'tenant_id',
         'uuid',
         'type',
         'store_url',

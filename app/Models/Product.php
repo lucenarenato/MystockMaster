@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Scopes\ProductScope;
 use App\Support\HasAdvancedFilter;
+use App\Traits\BelongsToTenant;
 use App\Traits\GetModelByUuid;
 use App\Traits\UuidGenerator;
 use Carbon\Carbon;
@@ -20,6 +21,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Product extends Model
 {
     use HasAdvancedFilter;
+    use BelongsToTenant;
     use Notifiable;
     use ProductScope;
     use HasFactory;
@@ -29,6 +31,7 @@ class Product extends Model
 
     public const ATTRIBUTES = [
         'id',
+        'tenant_id',
         'category_id',
         'name',
         'code',
@@ -44,6 +47,7 @@ class Product extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'tenant_id',
         'category_id',
         'featured',
         'uuid',

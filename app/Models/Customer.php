@@ -5,21 +5,25 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Support\HasAdvancedFilter;
+use App\Traits\BelongsToTenant;
 use App\Traits\GetModelByUuid;
 use App\Traits\UuidGenerator;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Customer extends Model
 {
     use HasAdvancedFilter;
+    use BelongsToTenant;
     use GetModelByUuid;
     use UuidGenerator;
     use HasFactory;
 
     public const ATTRIBUTES = [
         'id',
+        'tenant_id',
         'name',
         'email',
         'phone',
@@ -41,6 +45,7 @@ class Customer extends Model
     protected $fillable = [
         'uuid',
         'id',
+        'tenant_id',
         'city',
         'tax_number',
         'name',

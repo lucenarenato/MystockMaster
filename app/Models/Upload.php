@@ -13,4 +13,9 @@ class Upload extends Model implements HasMedia
     use InteractsWithMedia;
 
     protected $guarded = [];
+
+    /**
+     * Map the Upload model to the existing Portuguese-named files table.
+     */
+    protected $table = 'arquivos';
 }

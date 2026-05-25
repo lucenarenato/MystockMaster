@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Support\HasAdvancedFilter;
+use App\Traits\BelongsToTenant;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
@@ -13,9 +14,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Expense extends Model
 {
     use HasAdvancedFilter;
+    use BelongsToTenant;
 
     public const ATTRIBUTES = [
         'id',
+        'tenant_id',
         'category_id',
         'date',
         'reference',
@@ -33,6 +36,7 @@ class Expense extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'tenant_id',
         'category_id',
         'user_id',
         'warehouse_id',

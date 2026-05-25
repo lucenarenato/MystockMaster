@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Support\HasAdvancedFilter;
+use App\Traits\BelongsToTenant;
 use App\Traits\GetModelByUuid;
 use App\Traits\UuidGenerator;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class Supplier extends Model
 {
     use HasAdvancedFilter;
+    use BelongsToTenant;
     use GetModelByUuid;
     use UuidGenerator;
     use HasFactory;
@@ -21,6 +23,7 @@ class Supplier extends Model
     public const ATTRIBUTES = [
 
         'id',
+        'tenant_id',
         'name',
         'email',
         'phone',
@@ -42,6 +45,7 @@ class Supplier extends Model
     protected $fillable = [
         'uuid',
         'id',
+        'tenant_id',
         'name',
         'email',
         'phone',
