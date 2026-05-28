@@ -1,5 +1,5 @@
 # Use uma imagem base que suporte ARM64
-FROM php:8.2-fpm
+FROM php:8.3-fpm
 
 # Localizar e configurar mirrors alternativos
 COPY /.docker/base/resolv.conf /etc/resolv.conf

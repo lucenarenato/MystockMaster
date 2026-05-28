@@ -6,7 +6,6 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Support\HasAdvancedFilter;
-use App\Traits\BelongsToTenant;
 use App\Traits\GetModelByUuid;
 use App\Traits\UuidGenerator;
 use Illuminate\Database\Eloquent\Builder;
@@ -26,7 +25,6 @@ class User extends Authenticatable
     use HasApiTokens;
     use HasAdvancedFilter;
     use HasFactory;
-    use BelongsToTenant;
     use GetModelByUuid;
     use UuidGenerator;
 

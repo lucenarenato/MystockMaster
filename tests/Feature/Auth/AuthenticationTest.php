@@ -33,6 +33,19 @@ class AuthenticationTest extends TestCase
         $response->assertRedirect(RouteServiceProvider::HOME);
     }
 
+    public function test_seeded_admin_can_authenticate_and_access_dashboard()
+    {
+        $response = $this->post('/login', [
+            'email'    => 'admin@gmail.com',
+            'password' => 'password',
+        ]);
+
+        $this->assertAuthenticated();
+        $response->assertRedirect(RouteServiceProvider::HOME);
+
+        $this->get('/dashboard')->assertOk();
+    }
+
     public function test_users_can_not_authenticate_with_invalid_password()
     {
         $user = User::factory()->create();

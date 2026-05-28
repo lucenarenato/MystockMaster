@@ -152,14 +152,17 @@ class Transactions extends Component
 
     public function chart()
     {
+        $monthExpression = $this->datePartExpression('month', 'date');
+        $yearExpression = $this->datePartExpression('year', 'date');
+
         $query = Sale::selectRaw('SUM(total_amount) as total, SUM(due_amount) as due_amount')
-            ->when($this->typeChart === 'monthly', function ($q) {
-                return $q->selectRaw('MONTH(date) as labels, COUNT(*) as sales')
+            ->when($this->typeChart === 'monthly', function ($q) use ($monthExpression) {
+                return $q->selectRaw($monthExpression.' as labels, COUNT(*) as sales')
                     ->whereYear('date', '=', date('Y'))
-                    ->groupByRaw('MONTH(date)');
-            }, function ($q) {
-                return $q->selectRaw('YEAR(date) as labels, COUNT(*) as sales')
-                    ->groupByRaw('YEAR(date)');
+                    ->groupByRaw($monthExpression);
+            }, function ($q) use ($yearExpression) {
+                return $q->selectRaw($yearExpression.' as labels, COUNT(*) as sales')
+                    ->groupByRaw($yearExpression);
             })
             ->get()
             ->toArray();
@@ -173,13 +176,13 @@ class Transactions extends Component
         ];
 
         $query = Purchase::selectRaw('SUM(total_amount) as total, SUM(due_amount) as due_amount')
-            ->when($this->typeChart === 'monthly', function ($q) {
-                return $q->selectRaw('MONTH(date) as labels, COUNT(*) as purchases')
+            ->when($this->typeChart === 'monthly', function ($q) use ($monthExpression) {
+                return $q->selectRaw($monthExpression.' as labels, COUNT(*) as purchases')
                     ->whereYear('date', '=', date('Y'))
-                    ->groupByRaw('MONTH(date)');
-            }, function ($q) {
-                return $q->selectRaw('YEAR(date) as labels, COUNT(*) as purchases')
-                    ->groupByRaw('YEAR(date)');
+                    ->groupByRaw($monthExpression);
+            }, function ($q) use ($yearExpression) {
+                return $q->selectRaw($yearExpression.' as labels, COUNT(*) as purchases')
+                    ->groupByRaw($yearExpression);
             })
             ->get()
             ->toArray();
@@ -203,6 +206,23 @@ class Transactions extends Component
             ],
             'labels' => $sales['labels'],
         ]);
+    }
+
+    private function datePartExpression(string $part, string $column): string
+    {
+        $driver = DB::connection()->getDriverName();
+
+        if ($driver === 'sqlite') {
+            $format = $part === 'month' ? '%m' : '%Y';
+
+            return "CAST(strftime('{$format}', {$column}) AS INTEGER)";
+        }
+
+        if ($driver === 'pgsql') {
+            return 'EXTRACT('.strtoupper($part)." FROM {$column})";
+        }
+
+        return strtoupper($part)."({$column})";
     }
 
     protected function getChart($sales, $purchases)
