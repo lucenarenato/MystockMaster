@@ -232,6 +232,7 @@ docker compose exec fpm chown -R www-data:www-data bootstrap/cache
 docker compose exec fpm chown -R www-data:www-data storage bootstrap/cache
 docker compose exec fpm find storage bootstrap/cache -type d -exec chmod 775 {} \;
 docker compose exec fpm find storage bootstrap/cache -type f -exec chmod 664 {} \;
+docker compose exec fpm php artisan cache:clear && docker compose exec fpm php artisan config:clear && docker compose exec fpm php artisan view:clear
 ```
 
 Opcionalmente, valide escrita como usuario do PHP-FPM:

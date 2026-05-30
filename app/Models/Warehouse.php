@@ -5,15 +5,18 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Support\HasAdvancedFilter;
+use App\Traits\BelongsToTenant;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Warehouse extends Model
 {
     use HasAdvancedFilter;
+    use BelongsToTenant;
 
     public const ATTRIBUTES = [
         'id',
+        'tenant_id',
         'name',
         'city',
         'phone',
@@ -21,7 +24,6 @@ class Warehouse extends Model
         'country',
         'created_at',
         'updated_at',
-
     ];
 
     public $orderable = self::ATTRIBUTES;
@@ -33,6 +35,7 @@ class Warehouse extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'tenant_id',
         'name', 'phone', 'country', 'city', 'email',
     ];
 
@@ -56,8 +59,9 @@ class Warehouse extends Model
 
     public function getStockValueAttribute()
     {
-        return $this->products->sum(function ($product) {
-            return $product->pivot->qty * $product->pivot->cost;
-        });
+        return $this->products->reduce(
+            fn ($value, $product) => $value + ($product->pivot->qty * $product->pivot->cost),
+            0,
+        );
     }
 }

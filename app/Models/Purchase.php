@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Enums\PaymentStatus;
 use App\Enums\PurchaseStatus;
 use App\Support\HasAdvancedFilter;
+use App\Traits\BelongsToTenant;
 use App\Traits\GetModelByUuid;
 use App\Traits\UuidGenerator;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -17,11 +18,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Purchase extends Model
 {
     use HasAdvancedFilter;
+    use BelongsToTenant;
     use GetModelByUuid;
     use UuidGenerator;
 
     public const ATTRIBUTES = [
         'id',
+        'tenant_id',
         'date',
         'reference',
         'supplier_id',
@@ -50,6 +53,7 @@ class Purchase extends Model
     protected $fillable = [
         'id',
         'uuid',
+        'tenant_id',
         'date',
         'reference',
         'supplier_id',

@@ -10,6 +10,7 @@ use App\Traits\GetModelByUuid;
 use App\Traits\UuidGenerator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -29,7 +30,7 @@ class User extends Authenticatable
 
     public const ATTRIBUTES = [
 
-        'id', 'name', 'email', 'password', 'avatar',
+        'id', 'tenant_id', 'name', 'email', 'password', 'avatar',
         'phone', 'role_id', 'status', 'is_all_warehouses',
         'created_at', 'updated_at',
     ];
@@ -43,7 +44,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'uuid', 'id', 'name', 'email', 'password', 'avatar',
+        'uuid', 'id', 'tenant_id', 'name', 'email', 'password', 'avatar',
         'phone', 'role_id', 'status', 'is_all_warehouses',
         'created_at', 'updated_at', 'wallet_id',
     ];
@@ -81,6 +82,11 @@ class User extends Authenticatable
     public function assignedWarehouses(): BelongsToMany
     {
         return $this->belongsToMany(Warehouse::class);
+    }
+
+    public function tenant(): BelongsTo
+    {
+        return $this->belongsTo(Tenant::class);
     }
 
     /** @return HasOne<Wallet> */

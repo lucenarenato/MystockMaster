@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Enums\QuotationStatus;
 use App\Support\HasAdvancedFilter;
+use App\Traits\BelongsToTenant;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,9 +16,11 @@ use Illuminate\Support\Carbon;
 class Quotation extends Model
 {
     use HasAdvancedFilter;
+    use BelongsToTenant;
 
     public const ATTRIBUTES = [
         'id',
+        'tenant_id',
         'date',
         'reference',
         'customer_id',
@@ -39,6 +42,7 @@ class Quotation extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'tenant_id',
         'date',
         'reference',
         'customer_id',

@@ -8,6 +8,7 @@ use App\Enums\PaymentStatus;
 use App\Enums\SaleStatus;
 use App\Scopes\SaleScope;
 use App\Support\HasAdvancedFilter;
+use App\Traits\BelongsToTenant;
 use App\Traits\GetModelByUuid;
 use App\Traits\UuidGenerator;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -18,12 +19,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Sale extends Model
 {
     use HasAdvancedFilter;
+    use BelongsToTenant;
     use SaleScope;
     use UuidGenerator;
     use GetModelByUuid;
 
     public const ATTRIBUTES = [
         'id',
+        'tenant_id',
         'date',
         'reference',
         'customer_id',
@@ -56,6 +59,7 @@ class Sale extends Model
     protected $fillable = [
         'id',
         'uuid',
+        'tenant_id',
         'date',
         'reference',
         'customer_id',
