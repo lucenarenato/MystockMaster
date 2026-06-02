@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Models\Upload;
 use App\Support\HasAdvancedFilter;
 use App\Traits\BelongsToTenant;
 use App\Traits\GetModelByUuid;
@@ -11,6 +12,7 @@ use App\Traits\UuidGenerator;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Supplier extends Model
 {
@@ -104,6 +106,11 @@ class Supplier extends Model
         $debt = ($purchases - $purchase_returns) / 100;
 
         return $debt - $product_costs;
+    }
+
+    public function uploads(): MorphMany
+    {
+        return $this->morphMany(Upload::class, 'arquivavel');
     }
 
     private function supplierSum($column, $model)

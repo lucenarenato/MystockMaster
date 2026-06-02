@@ -8,10 +8,12 @@ use App\Support\HasAdvancedFilter;
 use App\Traits\BelongsToTenant;
 use App\Traits\GetModelByUuid;
 use App\Traits\UuidGenerator;
+use App\Models\Upload;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Customer extends Model
 {
@@ -85,6 +87,11 @@ class Customer extends Model
     public function getTotalDueAttribute(): int|float
     {
         return $this->customerSum('due_amount', Sale::class);
+    }
+
+    public function uploads(): MorphMany
+    {
+        return $this->morphMany(Upload::class, 'arquivavel');
     }
 
     private function customerSum($column, $model)

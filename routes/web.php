@@ -37,6 +37,7 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SuppliersController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\WarehouseController;
+use App\Http\Controllers\AttachmentsController;
 use App\Http\Controllers\DocsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Livewire\Language\EditTranslation;
@@ -99,6 +100,8 @@ Route::group(['middleware' => ['auth', 'setTenant']], function () {
     //Customers
     Route::get('customers', [CustomersController::class, 'index'])->name('customers.index');
     Route::get('customer/details/{id}', [CustomersController::class, 'show'])->name('customer.details');
+    Route::get('customer/{customer:uuid}/attachments/{upload}/download', [AttachmentsController::class, 'download'])
+        ->name('customer.attachments.download');
 
     Route::get('customergroup', [CustomerGroupController::class, 'index'])->name('customer-group.index');
 
