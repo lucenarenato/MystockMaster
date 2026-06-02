@@ -7,7 +7,6 @@
 /storage/*.key
 /vendor
 /bin
-/docs
 .env
 .env.backup
 .env.production
@@ -21,5 +20,5 @@ yarn-error.log
 /.idea
 /.vscode
 public/vendor/*
-docs/.vitepress/dist and  
+docs/.vitepress/dist and
 docs/.vitepress/cache

@@ -139,6 +139,9 @@ docker compose exec fpm php artisan key:generate
 ```bash
 docker compose exec fpm php artisan migrate
 ```
+
+Para documentação dos novos modelos de anexos/ECM (`Arquivo`, `Arquivavel`, `Volume`), consulte `docs/arquivo-arquivavel-volume.md`.
+
 (Opcional) Rode seeders:
 
 ```bash
