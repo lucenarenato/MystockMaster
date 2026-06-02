@@ -9,16 +9,23 @@ use App\Models\Purchase;
 use App\Models\PurchaseReturn;
 use App\Models\Supplier;
 use App\Traits\Datatable;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 
 class Details extends Component
 {
     use WithPagination;
     use WithSorting;
+    use WithFileUploads;
     use Datatable;
 
     public $supplier_id;
+
+    public $attachment;
+
+    public $attachmentName;
 
     /** @var mixed */
     public $supplier;
@@ -49,6 +56,53 @@ class Details extends Component
     public function resetSelected(): void
     {
         $this->selected = [];
+    }
+
+    protected $rules = [
+        'attachment' => 'required|file|max:10240',
+        'attachmentName' => 'nullable|string|max:191',
+    ];
+
+    public function getUploadsProperty()
+    {
+        return $this->supplier->uploads()->latest()->get();
+    }
+
+    public function uploadAttachment(): void
+    {
+        $this->validate();
+
+        $path = $this->attachment->store("suppliers/{$this->supplier_id}/attachments", 'public');
+
+        \App\Models\Upload::create([
+            'nome' => $this->attachmentName ?: $this->attachment->getClientOriginalName(),
+            'filename' => $this->attachment->hashName(),
+            'disk' => 'public',
+            'mime' => $this->attachment->getClientMimeType(),
+            'size' => $this->attachment->getSize(),
+            'caminho' => $path,
+            'arquivavel_type' => get_class($this->supplier),
+            'arquivavel_id' => $this->supplier_id,
+            'user_id' => auth()->id(),
+        ]);
+
+        $this->supplier->refresh();
+        $this->reset(['attachment', 'attachmentName']);
+
+        session()->flash('message', __('Document uploaded successfully.'));
+    }
+
+    public function deleteAttachment(\App\Models\Upload $upload): void
+    {
+        abort_unless($upload->arquivavel_type === get_class($this->supplier) && $upload->arquivavel_id === $this->supplier_id, 404);
+
+        Storage::disk($upload->disk)->delete($upload->caminho);
+
+        $upload->delete();
+
+        $this->supplier->refresh();
+
+        session()->flash('message', __('Document removed successfully.'));
     }
 
     public function mount($supplier): void

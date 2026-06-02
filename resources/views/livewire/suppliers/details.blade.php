@@ -246,6 +246,87 @@
                     {{ $this->supplierPayments->links() }}
                 </div>
             </div>
+            <div class="w-full px-2 mb-5">
+
+                <h2 class="my-5 text-2xl font-bold">
+                    {{ __('Documents & Attachments') }}
+                </h2>
+
+                @if (session()->has('message'))
+                    <div class="mb-4 p-4 rounded bg-emerald-50 text-emerald-700">
+                        {{ session('message') }}
+                    </div>
+                @endif
+
+                <div class="grid gap-6 lg:grid-cols-3">
+                    <div class="lg:col-span-1 bg-white dark:bg-dark-bg dark:text-gray-300 rounded-lg shadow-md p-4">
+                        <form wire:submit.prevent="uploadAttachment" enctype="multipart/form-data" class="space-y-4">
+                            <div>
+                                <x-label for="attachmentName" value="{{ __('Title') }}" />
+                                <x-input id="attachmentName" wire:model.defer="attachmentName" type="text" placeholder="{{ __('Optional title') }}" />
+                                @error('attachmentName')
+                                    <span class="text-sm text-red-600">{{ $message }}</span>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <x-label for="attachment" value="{{ __('Select file') }}" />
+                                <div class="mt-2">
+                                    <input id="attachment" type="file" wire:model="attachment" class="block w-full text-sm text-gray-500 file:border file:border-gray-300 file:text-sm file:font-medium file:px-4 file:py-2 file:rounded file:bg-white file:text-gray-700" />
+                                </div>
+                                @error('attachment')
+                                    <span class="text-sm text-red-600">{{ $message }}</span>
+                                @enderror
+                            </div>
+
+                            <div class="pt-2">
+                                <x-button type="submit" wire:loading.attr="disabled">
+                                    {{ __('Upload Document') }}
+                                </x-button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="lg:col-span-2 bg-white dark:bg-dark-bg dark:text-gray-300 rounded-lg shadow-md p-4">
+                        <x-table>
+                            <x-slot name="thead">
+                                <x-table.th>{{ __('Name') }}</x-table.th>
+                                <x-table.th>{{ __('Type') }}</x-table.th>
+                                <x-table.th>{{ __('Size') }}</x-table.th>
+                                <x-table.th>{{ __('Uploaded at') }}</x-table.th>
+                                <x-table.th>{{ __('Actions') }}</x-table.th>
+                            </x-slot>
+
+                            <x-table.tbody>
+                                @forelse ($this->uploads as $upload)
+                                    <x-table.tr wire:loading.class.delay="opacity-50">
+                                        <x-table.td>{{ $upload->nome }}</x-table.td>
+                                        <x-table.td>{{ $upload->mime }}</x-table.td>
+                                        <x-table.td>{{ $upload->size ? number_format($upload->size / 1024, 2).' KB' : __('-') }}</x-table.td>
+                                        <x-table.td>{{ $upload->created_at->format('Y-m-d H:i') }}</x-table.td>
+                                        <x-table.td class="space-x-2">
+                                            <a href="{{ route('supplier.attachments.download', ['supplier' => $supplier->uuid, 'upload' => $upload->id]) }}" class="text-indigo-600 hover:text-indigo-900">
+                                                {{ __('Download') }}
+                                            </a>
+                                            <button type="button" wire:click="deleteAttachment({{ $upload->id }})" class="text-red-600 hover:text-red-900" wire:loading.attr="disabled">
+                                                {{ __('Delete') }}
+                                            </button>
+                                        </x-table.td>
+                                    </x-table.tr>
+                                @empty
+                                    <x-table.tr>
+                                        <x-table.td colspan="5">
+                                            <div class="flex justify-center items-center py-8 text-gray-400 dark:text-gray-300">
+                                                {{ __('No documents found') }}
+                                            </div>
+                                        </x-table.td>
+                                    </x-table.tr>
+                                @endforelse
+                            </x-table.tbody>
+                        </x-table>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

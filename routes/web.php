@@ -102,6 +102,8 @@ Route::group(['middleware' => ['auth', 'setTenant']], function () {
     Route::get('customer/details/{id}', [CustomersController::class, 'show'])->name('customer.details');
     Route::get('customer/{customer:uuid}/attachments/{upload}/download', [AttachmentsController::class, 'download'])
         ->name('customer.attachments.download');
+    Route::get('supplier/{supplier:uuid}/attachments/{upload}/download', [AttachmentsController::class, 'downloadSupplier'])
+        ->name('supplier.attachments.download');
 
     Route::get('customergroup', [CustomerGroupController::class, 'index'])->name('customer-group.index');
 
