@@ -7,6 +7,7 @@ namespace App\Jobs;
 use App\Models\Sale;
 use App\Models\User;
 use App\Notifications\PaymentDue;
+use App\Traits\TenantAware;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -19,6 +20,7 @@ class PaymentNotification implements ShouldQueue
     use InteractsWithQueue;
     use Queueable;
     use SerializesModels;
+    use TenantAware;
 
     protected $sale;
 
@@ -30,6 +32,7 @@ class PaymentNotification implements ShouldQueue
     public function __construct(Sale $sale)
     {
         $this->sale = $sale;
+        $this->captureCurrentTenant();
     }
 
     /**

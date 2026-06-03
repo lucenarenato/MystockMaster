@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Jobs;
 
 use App\Models\Product;
+use App\Traits\TenantAware;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -20,6 +21,7 @@ class SyncYouCanProducts implements ShouldQueue
     use InteractsWithQueue;
     use Queueable;
     use SerializesModels;
+    use TenantAware;
 
     protected $data;
 
@@ -31,6 +33,7 @@ class SyncYouCanProducts implements ShouldQueue
     public function __construct(array $data)
     {
         $this->data = $data;
+        $this->captureCurrentTenant();
     }
 
     /**

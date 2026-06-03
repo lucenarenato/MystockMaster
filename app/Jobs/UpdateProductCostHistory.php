@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Jobs;
 
+use App\Traits\TenantAware;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -16,6 +17,7 @@ class UpdateProductCostHistory implements ShouldQueue
     use InteractsWithQueue;
     use Queueable;
     use SerializesModels;
+    use TenantAware;
 
     protected $cart_item;
 
@@ -27,6 +29,7 @@ class UpdateProductCostHistory implements ShouldQueue
     public function __construct($cart_item)
     {
         $this->cart_item = $cart_item;
+        $this->captureCurrentTenant();
     }
 
     /**

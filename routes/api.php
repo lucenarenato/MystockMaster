@@ -50,10 +50,12 @@ Route::post('/sanctum/token', function (Request $request) {
 //login the user
 Route::post('/login', [AuthApi::class, 'login']);
 
-Route::apiResource('products', ProductApi::class);
-Route::apiResource('categories', CategoryApi::class);
-Route::apiResource('customers', CustomerApi::class);
-Route::apiResource('suppliers', SupplierApi::class);
-Route::apiResource('expenses',ExpenseApi::class);
-Route::apiResource('roles', RoleApi::class);
-Route::apiResource('warehouses', WarehouseApi::class);
+Route::middleware(['auth:sanctum', 'setTenant'])->group(function () {
+    Route::apiResource('products', ProductApi::class);
+    Route::apiResource('categories', CategoryApi::class);
+    Route::apiResource('customers', CustomerApi::class);
+    Route::apiResource('suppliers', SupplierApi::class);
+    Route::apiResource('expenses', ExpenseApi::class);
+    Route::apiResource('roles', RoleApi::class);
+    Route::apiResource('warehouses', WarehouseApi::class);
+});
