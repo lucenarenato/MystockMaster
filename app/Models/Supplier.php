@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Models\Upload;
 use App\Support\HasAdvancedFilter;
 use App\Traits\BelongsToTenant;
+use App\Traits\RecordsActivity;
 use App\Traits\GetModelByUuid;
 use App\Traits\UuidGenerator;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -18,6 +19,7 @@ class Supplier extends Model
 {
     use HasAdvancedFilter;
     use BelongsToTenant;
+    use RecordsActivity;
     use GetModelByUuid;
     use UuidGenerator;
     use HasFactory;

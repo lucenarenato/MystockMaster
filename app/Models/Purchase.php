@@ -8,6 +8,7 @@ use App\Enums\PaymentStatus;
 use App\Enums\PurchaseStatus;
 use App\Support\HasAdvancedFilter;
 use App\Traits\BelongsToTenant;
+use App\Traits\RecordsActivity;
 use App\Traits\GetModelByUuid;
 use App\Traits\UuidGenerator;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -19,6 +20,7 @@ class Purchase extends Model
 {
     use HasAdvancedFilter;
     use BelongsToTenant;
+    use RecordsActivity;
     use GetModelByUuid;
     use UuidGenerator;
 

@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Support\HasAdvancedFilter;
 use App\Traits\BelongsToTenant;
+use App\Traits\RecordsActivity;
 use App\Traits\GetModelByUuid;
 use App\Traits\UuidGenerator;
 use App\Models\Upload;
@@ -19,6 +20,7 @@ class Customer extends Model
 {
     use HasAdvancedFilter;
     use BelongsToTenant;
+    use RecordsActivity;
     use GetModelByUuid;
     use UuidGenerator;
     use HasFactory;

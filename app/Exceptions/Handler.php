@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Exceptions;
 
+use App\Exceptions\TenantLimitExceededException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
@@ -45,6 +46,14 @@ class Handler extends ExceptionHandler
      */
     public function register()
     {
+        $this->renderable(function (TenantLimitExceededException $e, $request) {
+            if ($request->expectsJson()) {
+                return response()->json(['message' => $e->getMessage()], 402);
+            }
+
+            return back()->withErrors(['limit' => $e->getMessage()]);
+        });
+
         $this->reportable(function (Throwable $e) {
             if (app()->bound('sentry')) {
                 app('sentry')->captureException($e);

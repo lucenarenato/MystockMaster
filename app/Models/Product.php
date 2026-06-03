@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Scopes\ProductScope;
 use App\Support\HasAdvancedFilter;
 use App\Traits\BelongsToTenant;
+use App\Traits\RecordsActivity;
 use App\Traits\GetModelByUuid;
 use App\Traits\UuidGenerator;
 use Carbon\Carbon;
@@ -22,6 +23,7 @@ class Product extends Model
 {
     use HasAdvancedFilter;
     use BelongsToTenant;
+    use RecordsActivity;
     use Notifiable;
     use ProductScope;
     use HasFactory;

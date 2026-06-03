@@ -9,6 +9,7 @@ use App\Enums\SaleStatus;
 use App\Scopes\SaleScope;
 use App\Support\HasAdvancedFilter;
 use App\Traits\BelongsToTenant;
+use App\Traits\RecordsActivity;
 use App\Traits\GetModelByUuid;
 use App\Traits\UuidGenerator;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -20,6 +21,7 @@ class Sale extends Model
 {
     use HasAdvancedFilter;
     use BelongsToTenant;
+    use RecordsActivity;
     use SaleScope;
     use UuidGenerator;
     use GetModelByUuid;

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions;
 
+use App\Models\Setting;
 use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -34,8 +35,41 @@ class ProvisionTenant
 
             $user->assignRole('Super Admin');
 
+            Tenant::setCurrent($tenant);
+            $this->createDefaultSettings($tenant, $user);
+
             return $tenant;
         });
+    }
+
+    private function createDefaultSettings(Tenant $tenant, User $user): void
+    {
+        Setting::create([
+            'company_name'              => $tenant->name,
+            'company_email'             => $user->email,
+            'company_phone'             => '',
+            'company_logo'              => 'logo.png',
+            'company_address'           => '',
+            'company_tax'               => '',
+            'default_currency_id'       => 1,
+            'default_currency_position' => 'right',
+            'default_date_format'       => 'd-m-Y',
+            'default_language'          => 'pt-br',
+            'is_rtl'                    => false,
+            'sale_prefix'               => 'SA-',
+            'saleReturn_prefix'         => 'SRE-',
+            'purchase_prefix'           => 'PR-',
+            'purchaseReturn_prefix'     => 'PRE-',
+            'quotation_prefix'          => 'QU-',
+            'salePayment_prefix'        => 'SP-',
+            'purchasePayment_prefix'    => 'PP-',
+            'show_email'                => true,
+            'show_address'              => true,
+            'show_order_tax'            => true,
+            'show_discount'             => true,
+            'show_shipping'             => true,
+            'invoice_footer_text'       => 'Obrigado pela preferência!',
+        ]);
     }
 
     private function uniqueSlug(string $name): string
