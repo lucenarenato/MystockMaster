@@ -1,7 +1,17 @@
 <div>
     <form wire:submit.prevent="register">
-        <!-- Name -->
+        <!-- Company -->
         <div>
+            <x-input-label for="company" :value="__('Company')" />
+
+            <x-text-input id="company" wire:model.lazy="company" class="block mt-1 w-full" type="text"
+                name="company" required autofocus />
+
+            <x-input-error :messages="$errors->get('company')" class="mt-2" />
+        </div>
+
+        <!-- Name -->
+        <div class="mt-4">
             <x-input-label for="name" :value="__('Name')" />
 
             <x-text-input id="name" wire:model.lazy="name" class="block mt-1 w-full" type="text" name="name"
