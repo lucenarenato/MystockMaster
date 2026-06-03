@@ -4,17 +4,19 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Model;
 use App\Support\HasAdvancedFilter;
+use App\Traits\BelongsToTenant;
 use App\Traits\GetModelByUuid;
 use App\Traits\UuidGenerator;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Transfer extends Model
 {
     use HasFactory;
     use HasAdvancedFilter;
+    use BelongsToTenant;
     use UuidGenerator;
     use GetModelByUuid;
 

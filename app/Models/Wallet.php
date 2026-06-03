@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Support\HasAdvancedFilter;
+use App\Traits\BelongsToTenant;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Wallet extends Model
 {
     use HasAdvancedFilter;
+    use BelongsToTenant;
 
     public const ATTRIBUTES = [
         'id',

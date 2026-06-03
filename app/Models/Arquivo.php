@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Traits\BelongsToTenant;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Storage;
 
 class Arquivo extends Model
 {
+    use BelongsToTenant;
+
     protected $table = 'arquivos';
 
     protected $guarded = [];
@@ -53,7 +56,9 @@ class Arquivo extends Model
     public function getCaminho(): string
     {
         if ($this->unidade && $this->volume) {
-            return $this->unidade . '/' . $this->volume->volume . '/' . $this->id . '.' . ($this->extensao ?? '');
+            $tenantSegment = $this->tenant_id ? 'tenant/' . $this->tenant_id . '/' : '';
+
+            return $tenantSegment . $this->unidade . '/' . $this->volume->volume . '/' . $this->id . '.' . ($this->extensao ?? '');
         }
 
         return (string) ($this->caminho ?? '');

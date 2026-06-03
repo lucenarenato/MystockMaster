@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Support\HasAdvancedFilter;
+use App\Traits\BelongsToTenant;
 use Illuminate\Database\Eloquent\Model;
 
 class Printer extends Model
 {
     use HasAdvancedFilter;
+    use BelongsToTenant;
     public const ATTRIBUTES = [
         'id',
         'name',
