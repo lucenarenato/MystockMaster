@@ -8,36 +8,38 @@ use App\Models\Tenant;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class SubscriptionController extends Controller
 {
-    /** Cria uma nova assinatura para o tenant atual. */
-    public function subscribe(Request $request): JsonResponse
+    /** Abre o Stripe Checkout para criar uma nova assinatura. */
+    public function subscribe(Request $request): RedirectResponse
     {
         $request->validate([
             'plan'             => ['required', 'string', 'in:' . implode(',', array_keys(config('plans')))],
-            'payment_method'   => ['required', 'string'],
         ]);
 
         $tenant  = Tenant::current();
         $plan    = $request->plan;
         $priceId = config("plans.{$plan}.price_id");
 
-        $tenant->createOrGetStripeCustomer();
-        $tenant->updateDefaultPaymentMethod($request->payment_method);
+        abort_if(! $tenant || ! $priceId, 422, 'Plano sem preço Stripe configurado.');
 
-        $tenant->newSubscription('default', $priceId)->create($request->payment_method);
-
-        $tenant->applyPlanLimits($plan);
-
-        return response()->json([
-            'message' => 'Assinatura criada com sucesso.',
-            'plan'    => $plan,
-        ]);
+        return $tenant->newSubscription('default', $priceId)
+            ->trialDays((int) env('SAAS_TRIAL_DAYS', 14))
+            ->checkout([
+                'success_url' => route('billing.plans', ['checkout' => 'success', 'plan' => $plan]),
+                'cancel_url' => route('billing.plans', ['checkout' => 'cancelled']),
+                'metadata' => [
+                    'tenant_id' => $tenant->id,
+                    'plan' => $plan,
+                ],
+            ])
+            ->redirect();
     }
 
     /** Troca o tenant para outro plano. */
-    public function switchPlan(Request $request): JsonResponse
+    public function switchPlan(Request $request): JsonResponse|RedirectResponse
     {
         $request->validate([
             'plan' => ['required', 'string', 'in:' . implode(',', array_keys(config('plans')))],
@@ -51,6 +53,11 @@ class SubscriptionController extends Controller
 
         $tenant->applyPlanLimits($plan);
 
+        if (! $request->expectsJson()) {
+            return redirect()->route('billing.plans')
+                ->with('success', 'Plano atualizado com sucesso.');
+        }
+
         return response()->json([
             'message' => 'Plano atualizado com sucesso.',
             'plan'    => $plan,
@@ -58,9 +65,14 @@ class SubscriptionController extends Controller
     }
 
     /** Cancela a assinatura ao fim do ciclo atual. */
-    public function cancel(): JsonResponse
+    public function cancel(Request $request): JsonResponse|RedirectResponse
     {
         Tenant::current()->subscription('default')->cancel();
+
+        if (! $request->expectsJson()) {
+            return redirect()->route('billing.plans')
+                ->with('success', 'Assinatura cancelada. O acesso continua até o fim do período pago.');
+        }
 
         return response()->json(['message' => 'Assinatura cancelada. O acesso continua até o fim do período pago.']);
     }
@@ -69,12 +81,12 @@ class SubscriptionController extends Controller
     public function portal(Request $request): RedirectResponse
     {
         return Tenant::current()->redirectToBillingPortal(
-            route('dashboard')
+            route('home')
         );
     }
 
     /** Retorna os planos disponíveis e o plano atual do tenant. */
-    public function plans(): JsonResponse
+    public function plans(Request $request): View|JsonResponse
     {
         $tenant      = Tenant::current();
         $subscription = $tenant?->subscription('default');
@@ -86,6 +98,16 @@ class SubscriptionController extends Controller
             'limits'    => $plan['limits'],
             'active'    => $subscription?->stripe_price === $plan['price_id'],
         ]);
+
+        if (! $request->expectsJson()) {
+            return view('billing.plans', [
+                'plans' => $plans,
+                'tenant' => $tenant,
+                'subscription' => $subscription,
+                'subscribed' => $tenant?->subscribed('default') ?? false,
+                'onTrial' => $tenant?->onTrial() ?? false,
+            ]);
+        }
 
         return response()->json([
             'plans'           => $plans,

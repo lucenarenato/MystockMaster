@@ -3,8 +3,10 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\AdjustmentController;
+use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\BackupController;
+use App\Http\Controllers\BillingUsageController;
 use App\Http\Controllers\BarcodeController;
 use App\Http\Controllers\BrandsController;
 use App\Http\Controllers\CategoriesController;
@@ -37,6 +39,7 @@ use App\Http\Controllers\SalesReturnController;
 use App\Http\Controllers\SendQuotationEmailController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SuppliersController;
+use App\Http\Controllers\TenantWebhookController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\AttachmentsController;
@@ -235,11 +238,16 @@ Route::group(['middleware' => ['auth', 'setTenant', 'ensure.same.tenant']], func
     Route::prefix('billing')->name('billing.')->middleware('subscription.active')->group(function () {
         Route::get('/plans', [SubscriptionController::class, 'plans'])->name('plans')->withoutMiddleware('subscription.active');
         Route::post('/subscribe', [SubscriptionController::class, 'subscribe'])->name('subscribe')->withoutMiddleware('subscription.active');
+        Route::get('/usage', BillingUsageController::class)->name('usage');
         Route::post('/switch', [SubscriptionController::class, 'switchPlan'])->name('switch');
         Route::post('/cancel', [SubscriptionController::class, 'cancel'])->name('cancel');
         Route::get('/portal', [SubscriptionController::class, 'portal'])->name('portal');
     });
+
+    Route::get('/audit-logs', AuditLogController::class)->name('audit-logs.index');
 });
 
 // Stripe Webhook (fora do grupo auth — Stripe não tem sessão)
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleWebhook'])->name('cashier.webhook');
+Route::post('/webhook/{tenant:slug}/woocommerce', [TenantWebhookController::class, 'woocommerce'])->name('webhooks.woocommerce');
+Route::post('/webhook/{tenant:slug}/youcan', [TenantWebhookController::class, 'youcan'])->name('webhooks.youcan');

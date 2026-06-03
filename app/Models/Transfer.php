@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Support\HasAdvancedFilter;
 use App\Traits\BelongsToTenant;
 use App\Traits\GetModelByUuid;
+use App\Traits\RecordsActivity;
 use App\Traits\UuidGenerator;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -17,6 +18,7 @@ class Transfer extends Model
     use HasFactory;
     use HasAdvancedFilter;
     use BelongsToTenant;
+    use RecordsActivity;
     use UuidGenerator;
     use GetModelByUuid;
 

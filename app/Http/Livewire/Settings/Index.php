@@ -88,9 +88,10 @@ class Index extends Component
         $this->validate();
 
         if ($this->company_logo) {
-            $imageName = Str::slug($this->settings->company_name).'.'.$this->company_logo->extension();
+            $tenantPrefix = $this->settings->tenant_id ? 'tenant-'.$this->settings->tenant_id.'-' : '';
+            $imageName = $tenantPrefix.Str::slug($this->settings->company_name).'.'.$this->company_logo->extension();
             $this->company_logo->storeAs('uploads', $imageName, 'public');
-            $this->company_logo = $imageName;
+            $this->settings->company_logo = $imageName;
         }
 
         if ($this->invoice_header) {

@@ -9,6 +9,13 @@ use Laravel\Cashier\Http\Controllers\WebhookController as CashierWebhookControll
 
 class StripeWebhookController extends CashierWebhookController
 {
+    public function handleCustomerSubscriptionCreated(array $payload): void
+    {
+        parent::handleCustomerSubscriptionCreated($payload);
+
+        $this->applyLimitsFromSubscriptionPayload($payload);
+    }
+
     /**
      * Atualiza os limites do tenant quando a assinatura muda de plano
      * via portal do Stripe (upgrade/downgrade feito diretamente lá).
@@ -17,6 +24,11 @@ class StripeWebhookController extends CashierWebhookController
     {
         parent::handleCustomerSubscriptionUpdated($payload);
 
+        $this->applyLimitsFromSubscriptionPayload($payload);
+    }
+
+    private function applyLimitsFromSubscriptionPayload(array $payload): void
+    {
         $stripeSubscription = $payload['data']['object'];
         $stripeId           = $stripeSubscription['customer'];
         $priceId            = $stripeSubscription['items']['data'][0]['price']['id'] ?? null;

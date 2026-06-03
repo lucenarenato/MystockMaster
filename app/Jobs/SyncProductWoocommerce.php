@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Jobs;
 
 use App\Models\Product;
+use App\Traits\TenantAware;
 use Automattic\WooCommerce\Client;
 use DOMDocument;
 use Exception;
@@ -26,6 +27,7 @@ class SyncProductWooCommerce implements ShouldQueue
     use InteractsWithQueue;
     use Queueable;
     use SerializesModels;
+    use TenantAware;
 
     public $consumer_sec;
     public $site_url;
@@ -45,6 +47,7 @@ class SyncProductWooCommerce implements ShouldQueue
         $this->site_url = $site_url;
         $this->consumer_key = $consumer_key;
         $this->current_page = $current_page;
+        $this->captureCurrentTenant();
     }
 
     public function handle()
