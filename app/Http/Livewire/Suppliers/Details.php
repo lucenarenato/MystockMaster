@@ -8,6 +8,7 @@ use App\Http\Livewire\WithSorting;
 use App\Models\Purchase;
 use App\Models\PurchaseReturn;
 use App\Models\Supplier;
+use App\Services\TenantLimits;
 use App\Traits\Datatable;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
@@ -70,6 +71,8 @@ class Details extends Component
 
     public function uploadAttachment(): void
     {
+        app(TenantLimits::class)->check('storage');
+
         $this->validate();
 
         $path = $this->attachment->store("suppliers/{$this->supplier_id}/attachments", 'public');

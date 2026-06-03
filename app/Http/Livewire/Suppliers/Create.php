@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Livewire\Suppliers;
 
 use App\Models\Supplier;
+use App\Services\TenantLimits;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -60,6 +61,8 @@ class Create extends Component
     public function create(): void
     {
         try {
+            app(TenantLimits::class)->check('suppliers');
+
             $this->validate();
 
             $this->supplier->save();

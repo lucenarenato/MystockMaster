@@ -6,6 +6,7 @@ namespace App\Http\Livewire\Customers;
 
 use App\Models\Customer;
 use App\Models\Wallet;
+use App\Services\TenantLimits;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -57,6 +58,8 @@ class Create extends Component
     public function create(): void
     {
         try {
+            app(TenantLimits::class)->check('customers');
+
             $validatedData = $this->validate();
 
             $this->customer->save($validatedData);

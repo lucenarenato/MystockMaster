@@ -5,6 +5,7 @@ namespace app\Http\Controllers\Api;
 use App\Http\Controllers\Api\BaseController;
 use App\Http\Resources\CustomerResource;
 use App\Models\Customer;
+use App\Services\TenantLimits;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -76,6 +77,7 @@ class CustomerController extends BaseController
     {
         DB::beginTransaction();
         try {
+            app(TenantLimits::class)->check('customers');
             $input = $request->all();
             $Customer = Customer::create($input);
             DB::commit();

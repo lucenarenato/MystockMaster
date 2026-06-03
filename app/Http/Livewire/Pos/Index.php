@@ -9,6 +9,7 @@ use App\Enums\PaymentStatus;
 use App\Enums\SaleStatus;
 use App\Jobs\PaymentNotification;
 use App\Models\Customer;
+use App\Services\TenantLimits;
 use App\Models\Warehouse;
 use App\Models\Movement;
 use App\Models\Product;
@@ -149,6 +150,8 @@ class Index extends Component
 
             return;
         }
+
+        app(TenantLimits::class)->check('sales');
 
         DB::transaction(function () {
             $this->validate();

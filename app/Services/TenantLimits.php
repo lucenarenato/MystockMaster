@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Exceptions\TenantLimitExceededException;
+use App\Models\Customer;
 use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\Sale;
+use App\Models\Supplier;
 use App\Models\Tenant;
+use App\Models\Upload;
 use App\Models\User;
 
 class TenantLimits
@@ -27,11 +30,14 @@ class TenantLimits
         }
 
         [$limitField, $counter] = match ($resource) {
-            'users'     => ['max_users',     fn () => User::count()],
-            'products'  => ['max_products',  fn () => Product::count()],
-            'sales'     => ['max_sales',     fn () => Sale::count()],
-            'purchases' => ['max_purchases', fn () => Purchase::count()],
-            default     => [null, fn () => 0],
+            'users'      => ['max_users',      fn () => User::count()],
+            'products'   => ['max_products',   fn () => Product::count()],
+            'sales'      => ['max_sales',      fn () => Sale::count()],
+            'purchases'  => ['max_purchases',  fn () => Purchase::count()],
+            'customers'  => ['max_customers',  fn () => Customer::count()],
+            'suppliers'  => ['max_suppliers',  fn () => Supplier::count()],
+            'storage'    => ['max_storage_mb', fn () => (int) ceil(Upload::sum('size') / 1024 / 1024)],
+            default      => [null, fn () => 0],
         };
 
         if ($limitField === null) {

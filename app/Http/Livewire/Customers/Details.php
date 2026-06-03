@@ -9,6 +9,7 @@ use App\Models\Customer;
 use App\Models\Sale;
 use App\Models\SaleReturn;
 use App\Models\Upload;
+use App\Services\TenantLimits;
 use App\Traits\Datatable;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
@@ -70,6 +71,8 @@ class Details extends Component
 
     public function uploadAttachment(): void
     {
+        app(TenantLimits::class)->check('storage');
+
         $this->validate();
 
         $path = $this->attachment->store("customers/{$this->customer_id}/attachments", 'public');

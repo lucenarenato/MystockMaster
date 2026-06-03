@@ -5,6 +5,7 @@ namespace app\Http\Controllers\Api;
 use App\Http\Controllers\Api\BaseController;
 use App\Http\Resources\SupplierResource;
 use App\Models\Supplier;
+use App\Services\TenantLimits;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -65,6 +66,7 @@ class SupplierController extends BaseController
     {
         DB::beginTransaction();
         try {
+            app(TenantLimits::class)->check('suppliers');
             $input = $request->all();
             $Supplier = Supplier::create($input);
             DB::commit();
