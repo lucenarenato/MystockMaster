@@ -8,6 +8,7 @@ use App\Enums\MovementType;
 use App\Enums\PaymentStatus;
 use App\Enums\PurchaseStatus;
 use App\Jobs\UpdateProductCostHistory;
+use App\Services\TenantLimits;
 use App\Models\Movement;
 use App\Models\Warehouse;
 use App\Models\Product;
@@ -137,6 +138,8 @@ class Create extends Component
 
             return;
         }
+
+        app(TenantLimits::class)->check('purchases');
 
         DB::transaction(function () {
             $this->validate();

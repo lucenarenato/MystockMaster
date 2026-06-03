@@ -144,6 +144,26 @@ Para documentação dos novos modelos de anexos/ECM (`Arquivo`, `Arquivavel`, `V
 
 Para notas de multitenancy e requisitos de produto SaaS, consulte `docs/multitenancy-notas.md`.
 
+## Limites por tenant
+
+Cada tenant pode ter limites individuais configurados diretamente na tabela `tenants`. Campos disponíveis:
+
+| Campo | Recurso limitado |
+|---|---|
+| `max_users` | Usuários |
+| `max_products` | Produtos |
+| `max_sales` | Vendas |
+| `max_purchases` | Compras |
+| `max_storage_mb` | Armazenamento (MB) |
+
+`NULL` significa ilimitado (padrão). Para ativar um limite:
+
+```sql
+UPDATE tenants SET max_products = 100 WHERE id = 1;
+```
+
+Ao atingir o limite, a operação é bloqueada com mensagem de erro na interface e HTTP 402 na API.
+
 (Opcional) Rode seeders:
 
 ```bash

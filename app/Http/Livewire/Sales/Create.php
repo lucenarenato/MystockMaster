@@ -8,6 +8,7 @@ use App\Enums\MovementType;
 use App\Enums\PaymentStatus;
 use App\Enums\SaleStatus;
 use App\Jobs\PaymentNotification;
+use App\Services\TenantLimits;
 use App\Models\Category;
 use App\Models\Customer;
 use App\Models\Movement;
@@ -132,6 +133,8 @@ class Create extends Component
 
             return;
         }
+
+        app(TenantLimits::class)->check('sales');
 
         DB::transaction(function () {
             $this->validate();

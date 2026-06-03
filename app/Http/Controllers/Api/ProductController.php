@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
+use App\Services\TenantLimits;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -74,6 +75,7 @@ class ProductController extends BaseController
     {
         DB::beginTransaction();
         try {
+            app(TenantLimits::class)->check('products');
             $input = $request->all();
             $product = Product::create($input);
             DB::commit();

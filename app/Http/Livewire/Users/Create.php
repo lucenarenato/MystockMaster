@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\UserWarehouse;
 use App\Models\Role;
 use App\Models\Warehouse;
+use App\Services\TenantLimits;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Throwable;
@@ -69,6 +70,8 @@ class Create extends Component
     public function create(): void
     {
         try {
+            app(TenantLimits::class)->check('users');
+
             $validatedData = $this->validate();
 
             $user = User::create($validatedData);

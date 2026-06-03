@@ -9,6 +9,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductWarehouse;
 use App\Models\Warehouse;
+use App\Services\TenantLimits;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -94,6 +95,8 @@ class Create extends Component
     public function create(): void
     {
         try {
+            app(TenantLimits::class)->check('products');
+
             $validatedData = $this->validate();
 
             if ($this->image) {
