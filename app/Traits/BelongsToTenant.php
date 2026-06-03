@@ -28,7 +28,8 @@ trait BelongsToTenant
             }
 
             if (! $tenantId) {
-                $builder->whereNull($builder->getModel()->getTable() . '.tenant_id');
+                // Fail closed: sem tenant resolvido fora do console, não expõe nenhum registro.
+                $builder->whereRaw('0 = 1');
 
                 return;
             }
