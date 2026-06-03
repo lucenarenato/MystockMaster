@@ -16,6 +16,8 @@ use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\IntegrationController;
+use App\Http\Controllers\StripeWebhookController;
+use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\PermissionController;
@@ -228,4 +230,16 @@ Route::group(['middleware' => ['auth', 'setTenant', 'ensure.same.tenant']], func
 
     // Integrations
     Route::get('/integrations', IntegrationController::class)->name('integrations.index');
+
+    // Billing
+    Route::prefix('billing')->name('billing.')->middleware('subscription.active')->group(function () {
+        Route::get('/plans', [SubscriptionController::class, 'plans'])->name('plans')->withoutMiddleware('subscription.active');
+        Route::post('/subscribe', [SubscriptionController::class, 'subscribe'])->name('subscribe')->withoutMiddleware('subscription.active');
+        Route::post('/switch', [SubscriptionController::class, 'switchPlan'])->name('switch');
+        Route::post('/cancel', [SubscriptionController::class, 'cancel'])->name('cancel');
+        Route::get('/portal', [SubscriptionController::class, 'portal'])->name('portal');
+    });
 });
+
+// Stripe Webhook (fora do grupo auth — Stripe não tem sessão)
+Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleWebhook'])->name('cashier.webhook');

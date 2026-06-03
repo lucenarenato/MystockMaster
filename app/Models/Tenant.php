@@ -11,10 +11,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Laravel\Cashier\Billable;
 
 class Tenant extends Model
 {
     use HasAdvancedFilter;
+    use Billable;
     use HasFactory;
     use GetModelByUuid;
     use UuidGenerator;
@@ -78,5 +80,34 @@ class Tenant extends Model
     public function banner(): BelongsTo
     {
         return $this->belongsTo(Upload::class, 'banner_id');
+    }
+
+    /** Cashier usa email para criar o cliente no Stripe. */
+    public function stripeEmail(): ?string
+    {
+        return $this->users()->orderBy('id')->value('email');
+    }
+
+    /** Aplica os limites do plano ao tenant. */
+    public function applyPlanLimits(string $planKey): void
+    {
+        $limits = config("plans.{$planKey}.limits");
+
+        if ($limits === null) {
+            // Enterprise: remove todos os limites
+            $this->update([
+                'max_users'      => null,
+                'max_products'   => null,
+                'max_sales'      => null,
+                'max_purchases'  => null,
+                'max_customers'  => null,
+                'max_suppliers'  => null,
+                'max_storage_mb' => null,
+            ]);
+
+            return;
+        }
+
+        $this->update($limits);
     }
 }
