@@ -73,7 +73,7 @@ Route::get('/docs', function () {
     return File::get(public_path().'/docs/'.$file.'.html');
 });
 
-Route::group(['middleware' => ['auth', 'setTenant']], function () {
+Route::group(['middleware' => ['auth', 'setTenant', 'ensure.same.tenant']], function () {
     // change lang
     Route::get('/lang/{lang}', [HomeController::class, 'changeLanguage'])->name('changelanguage');
 

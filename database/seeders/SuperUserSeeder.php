@@ -73,6 +73,7 @@ class SuperUserSeeder extends Seeder
                 'phone'             => '0123456789',
                 'role_id'           => 1,
                 'tenant_id'         => null,
+                'is_system_admin'   => true,
                 'status'            => 1,
                 'is_all_warehouses' => 1,
                 'remember_token'    => null,

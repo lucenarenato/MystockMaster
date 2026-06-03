@@ -50,7 +50,7 @@ Route::post('/sanctum/token', function (Request $request) {
 //login the user
 Route::post('/login', [AuthApi::class, 'login']);
 
-Route::middleware(['auth:sanctum', 'setTenant'])->group(function () {
+Route::middleware(['auth:sanctum', 'setTenant', 'ensure.same.tenant'])->group(function () {
     Route::apiResource('products', ProductApi::class);
     Route::apiResource('categories', CategoryApi::class);
     Route::apiResource('customers', CustomerApi::class);

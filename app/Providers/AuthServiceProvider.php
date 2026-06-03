@@ -27,8 +27,10 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
+        // Apenas o super-admin do sistema bypassa todos os gates.
+        // Admins de tenant com role 'Super Admin' ficam restritos ao seu tenant.
         Gate::before(function ($user, $ability) {
-            return $user->hasRole('Super Admin') ? true : null;
+            return $user->is_system_admin ? true : null;
         });
     }
 }
