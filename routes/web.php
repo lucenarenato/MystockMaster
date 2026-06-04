@@ -61,7 +61,9 @@ use Illuminate\Support\Facades\View;
 
 require __DIR__.'/auth.php';
 
-Route::get('/', [AuthenticatedSessionController::class, 'create']);
+Route::get('/', function () {
+    return view('landing.home');
+})->name('landing.home');
 
 // Route::get('/docs/{file?}', [DocsController::class, 'index'])->name('docs.index');
 
