@@ -6,6 +6,10 @@
     <title>Stock Softwares</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
+        body {
+            color: #212529;
+            background-color: #212529;
+        }
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -262,10 +266,9 @@
                     <div class="p-8 space-y-4 delay-100 border rounded-3xl border-white/10 bg-slate-900/70 text-slate-200 animate-fadeInUp">
                         <p class="text-lg font-semibold text-white">Entre em contato</p>
                         <div class="space-y-3 text-sm text-slate-300">
-                            <p><strong>Telefone:</strong> +55 51 99388-4569</p>
+                            <p><strong>Telefone:</strong> +55 62 98430-6136</p>
                             <p><strong>Email:</strong> comercial@MystockMastersmart.com.br</p>
-                            <p><strong>Curitiba:</strong> Av. Rep. Argentina, 1160 - Sala 907, Água Verde</p>
-                            <p><strong>Campo Grande:</strong> R. Alfredo Lisboa, 956, Tijuca</p>
+                            <p><strong>Goiania:</strong> Av. 20, 0 - C1, Aparecida de Goiania - GO</p>
                         </div>
                         <a href="mailto:comercial@MystockMastersmart.com.br" class="inline-flex items-center justify-center px-6 py-3 text-sm font-semibold transition rounded-full bg-sky-500 text-slate-950 hover:bg-sky-400 hover:shadow-lg hover:shadow-sky-500/50">Enviar email</a>
                     </div>
@@ -296,7 +299,7 @@
                     <p>Desenvolvimento de sistemas logísticos e WMS.</p>
                 </div>
                 <div class="flex flex-wrap gap-4 text-sm text-slate-300">
-                    <a href="https://wa.me/+5551993884569" target="_blank" class="transition hover:text-sky-400">WhatsApp</a>
+                    <a href="https://wa.me/+5562984306136" target="_blank" class="transition hover:text-sky-400">WhatsApp</a>
                     <a href="https://instagram.com" target="_blank" class="transition hover:text-sky-400">Instagram</a>
                     <a href="https://linkedin.com" target="_blank" class="transition hover:text-sky-400">LinkedIn</a>
                 </div>
