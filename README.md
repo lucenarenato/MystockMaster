@@ -144,6 +144,74 @@ Para documentação dos novos modelos de anexos/ECM (`Arquivo`, `Arquivavel`, `V
 
 Para notas de multitenancy e requisitos de produto SaaS, consulte `docs/multitenancy-notas.md`.
 
+## Stripe / Billing
+
+O projeto usa Laravel Cashier + Stripe para gerenciar assinaturas e planos.
+
+Para criar os produtos e preços automáticos na Stripe, use o comando:
+
+```bash
+docker compose exec -T fpm php artisan stripe:create-plans --save-env
+```
+
+O comando irá:
+ - ler os planos definidos em `config/plans.php`
+ - criar um produto Stripe para cada plano se ainda não existir
+ - criar um preço recorrente (`price`) para cada produto
+ - exibir os IDs `STRIPE_PRICE_BASIC`, `STRIPE_PRICE_PRO` e `STRIPE_PRICE_ENTERPRISE`
+ - opcionalmente salvar os valores em `.env`
+
+Se quiser forçar a sobrescrição das variáveis já existentes no `.env`, adicione `--force`.
+
+Exemplo completo:
+
+```bash
+docker compose exec -T fpm php artisan stripe:create-plans --save-env --force
+```
+
+Para funcionar corretamente, o Stripe precisa das chaves de API e do secret de webhook.
+
+1. No painel Stripe, acesse `Developers` → `API keys`.
+2. Copie a `Publishable key` para `STRIPE_KEY`.
+3. Copie a `Secret key` para `STRIPE_SECRET`.
+4. Em `Developers` → `Webhooks`, crie um endpoint para `POST /stripe/webhook`.
+5. Copie o `Signing secret` do webhook para `STRIPE_WEBHOOK_SECRET`.
+
+> Para ambiente de desenvolvimento use as chaves de teste (`Test mode`). Em produção, troque para as chaves ao vivo (`Live mode`).
+
+Depois, verifique se as variáveis a seguir estão preenchidas no `.env`:
+
+```env
+STRIPE_KEY=
+STRIPE_SECRET=
+STRIPE_WEBHOOK_SECRET=
+STRIPE_PRICE_BASIC=
+STRIPE_PRICE_PRO=
+STRIPE_PRICE_ENTERPRISE=
+```
+
+Também é preciso configurar o webhook Stripe para `POST /stripe/webhook`.
+
+### Nota sobre execução local
+
+Ao executar `php artisan` localmente você pode encontrar o erro do Composer informando que a versão do PHP da máquina é incompatível, por exemplo:
+
+```text
+Composer detected issues in your platform:
+
+Your Composer dependencies require a PHP version ">= 8.3.0". You are running 8.2.31.
+
+PHP Fatal error:  Uncaught RuntimeException: Composer detected issues in your platform: Your Composer dependencies require a PHP version ">= 8.3.0". You are running 8.2.31. in /path/to/vendor/composer/platform_check.php:26
+```
+
+Nesse caso use os comandos dentro do container Docker do projeto (ambiente suportado):
+
+```bash
+docker compose exec -T fpm php artisan stripe:create-plans --save-env
+```
+
+O comando acima garante que o Artisan rode com a versão de PHP provida pelo container e evita erros locais de plataforma.
+
 ## Limites por tenant
 
 Cada tenant pode ter limites individuais configurados diretamente na tabela `tenants`. Campos disponíveis:
