@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
+use App\Support\Cart;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -24,7 +25,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // Sanctum::ignoreMigrations();
+        // Substitui o Cart do pacote pela subclasse local que adiciona discount(), setGlobalTax() e setGlobalDiscount()
+        $this->app->bind('cart', Cart::class);
     }
 
     /**
