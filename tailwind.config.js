@@ -1,4 +1,5 @@
 const defaultTheme = require('tailwindcss/defaultTheme');
+const colors = require('tailwindcss/colors');
 
 /** @type {import('tailwindcss').Config} */
 
@@ -33,6 +34,14 @@ module.exports = {
 
             black: '#000',
             white: '#fff',
+
+            // Paletas adicionadas para a landing page
+            slate: colors.slate,
+            sky: colors.sky,
+            violet: colors.violet,
+            emerald: colors.emerald,
+            amber: colors.amber,
+            rose: colors.rose,
 
             gray: {
                 50: '#F1F5FB',
