@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Models\Tenant;
+use Illuminate\Http\Request;
+use Stripe\Event;
+use Stripe\Exception\SignatureVerificationException;
 use Laravel\Cashier\Http\Controllers\WebhookController as CashierWebhookController;
 
 class StripeWebhookController extends CashierWebhookController
@@ -59,5 +62,38 @@ class StripeWebhookController extends CashierWebhookController
         }
 
         return null;
+    }
+
+    public function handle(Request $request)
+    {
+        $endpoint_secret = env('STRIPE_WEBHOOK_SECRET');
+        $payload = $request->getContent();
+        $sig_header = $request->header('Stripe-Signature');
+
+        try {
+            $event = Event::constructEvent(
+                $payload,
+                $sig_header,
+                $endpoint_secret
+            );
+        } catch (SignatureVerificationException $e) {
+            // Invalid signature
+            return response()->json(['error' => 'Invalid signature'], 400);
+        }
+
+        switch ($event->type) {
+            case 'invoice.payment_succeeded':
+                $subscription = $event->data->object->subscriptions->data[0];
+                $planId = $subscription->items->data[0]->plan->id;
+
+                // Capture the tenant ID from some context (e.g., user session)
+                $tenantId = auth()->user()->current_tenant_id;
+
+                \App\Models\Tenant::find($tenantId)->applyPlanLimits($planId);
+                break;
+            // Handle other events as needed
+        }
+
+        return response()->json(['received' => 'success']);
     }
 }

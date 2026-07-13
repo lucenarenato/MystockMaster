@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Http\Controllers\AdjustmentController;
 use App\Http\Controllers\AuditLogController;
+use App\Http\Controllers\AuditController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\BackupController;
 use App\Http\Controllers\BillingUsageController;
@@ -44,6 +45,7 @@ use App\Http\Controllers\UsersController;
 use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\AttachmentsController;
 use App\Http\Controllers\DocsController;
+use App\Http\Controllers\UsageDashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Livewire\Language\EditTranslation;
 use Illuminate\Support\Facades\View;
@@ -232,11 +234,20 @@ Route::group(['middleware' => ['auth', 'setTenant', 'ensure.same.tenant']], func
 
     //General Settings
     Route::get('/settings', SettingController::class)->name('settings.index');
+    Route::get('/settings/{setting}/edit', [SettingController::class, 'edit'])->name('settings.edit');
+    Route::put('/settings/{setting}', [SettingController::class, 'update'])->name('settings.update');
 
     // Integrations
     Route::get('/integrations', IntegrationController::class)->name('integrations.index');
 
+    Route::get('/dashboard/usage', [UsageDashboardController::class, 'index'])->name('dashboard.usage');
+
+    Route::get('/audit', [AuditController::class, 'index'])->name('audit.index');
+
     // Billing
+    Route::get('/billing/plans', [SubscriptionController::class, 'index'])->name('subscription.index');
+    Route::post('/billing/checkout', [SubscriptionController::class, 'checkout'])->name('subscription.checkout');
+    Route::get('/billing/success', [SubscriptionController::class, 'success'])->name('subscription.success');
     Route::prefix('billing')->name('billing.')->middleware('subscription.active')->group(function () {
         Route::get('/plans', [SubscriptionController::class, 'plans'])->name('plans')->withoutMiddleware('subscription.active');
         Route::post('/subscribe', [SubscriptionController::class, 'subscribe'])->name('subscribe')->withoutMiddleware('subscription.active');
@@ -251,5 +262,6 @@ Route::group(['middleware' => ['auth', 'setTenant', 'ensure.same.tenant']], func
 
 // Stripe Webhook (fora do grupo auth — Stripe não tem sessão)
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleWebhook'])->name('cashier.webhook');
+Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle'])->name('stripe.webhook');
 Route::post('/webhook/{tenant:slug}/woocommerce', [TenantWebhookController::class, 'woocommerce'])->name('webhooks.woocommerce');
 Route::post('/webhook/{tenant:slug}/youcan', [TenantWebhookController::class, 'youcan'])->name('webhooks.youcan');

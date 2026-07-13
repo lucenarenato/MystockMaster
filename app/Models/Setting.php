@@ -13,6 +13,8 @@ class Setting extends Model
     use BelongsToTenant;
     protected $guarded = [];
 
+    protected $fillable = ['tenant_id', 'name', 'value', 'company_logo'];
+
     public function currency(): BelongsTo
     {
         return $this->belongsTo(Currency::class, 'default_currency_id', 'id');

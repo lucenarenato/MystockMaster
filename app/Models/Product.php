@@ -10,6 +10,7 @@ use App\Traits\BelongsToTenant;
 use App\Traits\RecordsActivity;
 use App\Traits\GetModelByUuid;
 use App\Traits\UuidGenerator;
+use App\Traits\RecordsActivityTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -23,6 +24,7 @@ class Product extends Model
 {
     use HasAdvancedFilter;
     use BelongsToTenant;
+    use RecordsActivityTrait;
     use RecordsActivity;
     use Notifiable;
     use ProductScope;

@@ -9,9 +9,92 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Stripe\Stripe;
+use Stripe\Checkout\Session;
+use Stripe\Price;
+use Illuminate\Support\Facades\Log;
+
 
 class SubscriptionController extends Controller
 {
+    public function index()
+    {
+        $plans = [
+            [
+                'id' => 'basic',
+                'name' => 'Básico',
+                'price' => 10,
+                'features' => ['3 usuários', '100 produtos', '300 vendas', '300 compras', '100 clientes', '50 fornecedores', '512 MB de armazenamento'],
+            ],
+            [
+                'id' => 'pro',
+                'name' => 'Pro',
+                'price' => 20,
+                'features' => ['10 usuários', '500 produtos', '2.000 vendas', '2.000 compras', '500 clientes', '200 fornecedores', '2 GB de armazenamento'],
+            ],
+            [
+                'id' => 'enterprise',
+                'name' => 'Enterprise',
+                'price' => 30,
+                'features' => ['Ilimitado usuários', 'Ilimitados produtos', 'Ilimitadas vendas', 'Ilimitadas compras', 'Ilimitados clientes', 'Ilimitados fornecedores', 'Ilimitado armazenamento'],
+            ],
+        ];
+
+        return view('billing.plans', compact('plans'));
+    }
+
+    public function checkout(Request $request)
+    {
+        Stripe::setApiKey(env('STRIPE_SECRET'));
+
+        $priceId = match ($request->input('plan_id')) {
+            'basic' => env('STRIPE_PRICE_BASIC'),
+            'pro' => env('STRIPE_PRICE_PRO'),
+            'enterprise' => env('STRIPE_PRICE_ENTERPRISE'),
+            default => throw new \Exception("Plano inválido"),
+        };
+
+        $session = Session::create([
+            'payment_method_types' => ['card'],
+            'line_items' => [[
+                'price_data' => [
+                    'currency' => 'brl',
+                    'product_data' => [
+                        'name' => 'MystockMaster - ' . ucfirst($request->input('plan_id')),
+                        'metadata' => ['plan_id' => $request->input('plan_id')],
+                    ],
+                    'unit_amount' => (int) ($price * 100),
+                ],
+                'quantity' => 1,
+            ]],
+            'mode' => 'payment',
+            'success_url' => route('subscription.success') . '?session_id={CHECKOUT_SESSION_ID}',
+            'cancel_url' => route('subscription.index'),
+            'trial_period_days' => 14, // Add this line to enable the trial period
+        ]);
+
+        return redirect($session->url, 303);
+    }
+
+    public function success(Request $request)
+    {
+        $sessionId = $request->query('session_id');
+        if (!$sessionId) {
+            abort(400, 'Invalid session ID');
+        }
+
+        $session = \Stripe\Checkout\Session::retrieve($sessionId);
+
+        if ($session->payment_status === 'paid') {
+            $user = auth()->user();
+            $tenantId = $user->current_tenant_id; // Assuming you have this logic
+
+            \App\Models\Tenant::find($tenantId)->applyPlanLimits($session->metadata['plan_id']);
+        }
+
+        return view('billing.success');
+    }
+
     /** Abre o Stripe Checkout para criar uma nova assinatura. */
     public function subscribe(Request $request): RedirectResponse
     {
